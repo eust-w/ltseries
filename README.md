@@ -43,7 +43,7 @@ The walkthrough uses real application captures and real provider outputs. It is 
 
 | Explore the workspace | See an actual output |
 | :---: | :---: |
-| ![Edited chapter preview of the real LTSeries interface](docs/media/workflow-tour.gif) | ![Animated excerpt from a real LTSeries-generated film](docs/media/generated-film.gif) |
+| <img src="docs/media/workflow-tour.gif" width="480" alt="Edited chapter preview of the real LTSeries interface" /> | <img src="docs/media/generated-film.gif" width="150" alt="Animated excerpt from a real LTSeries-generated film" /> |
 | Script, art direction, assets, storyboard and settings | AI-generated imagery; manually review continuity and artifacts |
 
 ## Why LTSeries?
