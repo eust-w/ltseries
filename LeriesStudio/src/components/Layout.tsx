@@ -15,6 +15,8 @@ import {
   Layers,
   Film,
   LogOut,
+  ChevronDown,
+  ChevronUp,
   Trash2
 } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -178,6 +180,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 function TaskMonitor() {
   const { tasks, refreshTasks } = useProject();
+  const [collapsed, setCollapsed] = React.useState(false);
   const activeTasks = tasks.filter(t => t.status === 'processing' || t.status === 'pending');
   const visibleTasks = tasks.slice(0, 8);
 
@@ -196,10 +199,21 @@ function TaskMonitor() {
   return (
     <div className="fixed bottom-6 right-6 z-50">
       <div className="bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden w-[340px]">
-        <div className="bg-slate-50 border-b border-slate-100 px-4 py-2 flex items-center justify-between">
+        <div className="bg-slate-50 border-b border-slate-100 px-4 py-2 flex items-center justify-between gap-3">
           <span className="text-xs font-semibold text-slate-600">任务记录 ({activeTasks.length} 进行中 / {tasks.length} 总计)</span>
+          <button
+            type="button"
+            aria-label={collapsed ? '展开任务记录' : '收起任务记录'}
+            title={collapsed ? '展开任务记录' : '收起任务记录'}
+            aria-expanded={!collapsed}
+            aria-controls="task-monitor-list"
+            onClick={() => setCollapsed(value => !value)}
+            className="h-7 w-7 shrink-0 flex items-center justify-center rounded text-slate-500 hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-indigo-600"
+          >
+            {collapsed ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
         </div>
-        <div className="max-h-60 overflow-y-auto p-2 space-y-1">
+        <div id="task-monitor-list" hidden={collapsed} className="max-h-60 overflow-y-auto p-2 space-y-1">
           {visibleTasks.map(task => (
             <div key={task.id} className="p-3 rounded-lg border border-slate-100 bg-slate-50/50">
               <div className="flex items-center justify-between mb-1.5">

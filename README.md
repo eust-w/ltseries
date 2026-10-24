@@ -15,7 +15,7 @@ Built with **Go · Gin · MongoDB · React**, with real AI provider integrations
 
 **English** · [简体中文](README.zh-CN.md)
 
-[Quick Start](#quick-start) · [Features](#what-you-can-create) · [Architecture](#architecture) · [API](docs/frontend-api.md) · [Contributing](CONTRIBUTING.md)
+[Watch the Demo](#watch-the-demo) · [Product Tour](#product-tour) · [Quick Start](#quick-start) · [API](docs/frontend-api.md) · [Roadmap](#roadmap)
 
 </div>
 
@@ -27,11 +27,101 @@ LTSeries keeps that workflow in one workspace: plan a story, establish its visua
 
 > **Project status:** early-stage, self-hosted software for individual creators and trusted teams. The current interface is primarily Chinese. Generation uses paid external APIs; provider access and output quality depend on your account and chosen models.
 
-## A Look Inside
+## Watch the Demo
 
-![LTSeries Studio: script, art direction, assets and storyboard navigation](docs/images/studio.jpg)
+[![LTSeries narrated product walkthrough: from script to editable shots](docs/images/demo-cover.jpg)](https://github.com/eust-w/ltseries/releases/download/showcase-2026-10/ltseries-landscape-zh.mp4)
 
-*A real application screenshot. Generation results are not bundled as canned demo data.*
+<div align="center">
+
+**[Watch / download the landscape demo](https://github.com/eust-w/ltseries/releases/download/showcase-2026-10/ltseries-landscape-zh.mp4)** · **[Vertical edition](https://github.com/eust-w/ltseries/releases/download/showcase-2026-10/ltseries-portrait-zh.mp4)** · **[30-second generated sample](https://github.com/eust-w/ltseries/releases/download/showcase-2026-10/ltseries-generated-sample.mp4)**
+
+[English subtitles](https://github.com/eust-w/ltseries/releases/download/showcase-2026-10/ltseries-en.srt) · [中文解说字幕](https://github.com/eust-w/ltseries/releases/download/showcase-2026-10/ltseries-zh.srt) · [Media provenance & reproduction](docs/media/README.md)
+
+</div>
+
+The walkthrough uses real application captures and real provider outputs. It is an **edited presentation, not a real-time generation benchmark**. Narration is post-production TTS, not a demonstration of a built-in voice service. The film excerpt is an older six-shot production; the new screenshots come from a separate October 2026 run.
+
+| Explore the workspace | See an actual output |
+| :---: | :---: |
+| ![Edited chapter preview of the real LTSeries interface](docs/media/workflow-tour.gif) | ![Animated excerpt from a real LTSeries-generated film](docs/media/generated-film.gif) |
+| Script, art direction, assets, storyboard and settings | AI-generated imagery; manually review continuity and artifacts |
+
+## Why LTSeries?
+
+**The story is not finished when one clip finishes generating.** LTSeries is built around the work that comes before and after that request.
+
+- **One production context.** Keep scripts, style decisions, character references and shots in the same project instead of repeatedly rebuilding context in separate tools.
+- **A creator-controlled workflow.** Edit the extracted plan, choose references, regenerate one shot and review the result. Automation does not remove the director.
+- **A recoverable task trail.** Generation is a MongoDB-backed job with a status and result, not a spinner that disappears when the page reloads.
+- **An inspectable stack.** React and TypeScript in the studio; Go, Gin and MongoDB behind it; FFmpeg for assembly. No Python service or Redis queue is required.
+- **Your infrastructure, your provider configuration.** Self-host the application and supply your model credentials. Script and reference data still leave your server when you submit them to an external model provider.
+
+Designed for **AI comic/short-drama creators**, **independent filmmakers prototyping scenes**, and **developers building production tools around model APIs**. It is not a replacement for a full nonlinear editor or a visual-consistency guarantee.
+
+## Product Tour
+
+```text
+Script -> Art direction -> Reusable assets -> Storyboard -> Video takes -> Assembly
+                         Human review and revision at every stage
+```
+
+### 1. Start With the Story
+
+Write or paste the original script, save revisions and run analysis. The LLM extracts named entities and shot plans; the original text remains available for editing. Organize larger stories as a series with episodes.
+
+![Script editor showing a real completed analysis with seven assets and six shots](docs/images/script.jpg)
+
+**The example above:** a 256-character Chinese script became **1 character, 3 scenes, 3 props and 6 shots**. These are the observed results of one run, not a promised output count or quality metric.
+
+### 2. Give the Series a Visual Language
+
+Choose a preset or review AI recommendations. Adjust positive and negative prompts and color/camera notes before generating more media. The brief stays editable as the story evolves.
+
+![AI-generated art direction recommendations and editable style prompts](docs/images/art-direction.jpg)
+
+### 3. Build a Reference Library
+
+Characters have dedicated **full-body, three-view and headshot** generation slots. Scenes and props have their own asset collections. Upload source material, retain variants, select references and lock assets you want to keep.
+
+![Real character references generated through the application's DashScope integration](docs/images/assets.jpg)
+
+The screenshot shows real generated outputs, not stock portraits. A slot name expresses the requested view; you still need to check whether a model actually followed the composition and identity brief.
+
+### 4. Direct Each Shot
+
+Review the action, camera language, dialogue, scene assignment and prompt for each shot. Generate a first frame before a video, keep the useful takes and revise the ones that drift. Models can support I2V, R2V or T2V; access and inputs vary by provider.
+
+![A real generated first frame alongside editable shot direction](docs/images/storyboard.jpg)
+
+<details>
+<summary><strong>Inspect the shot editor</strong></summary>
+
+![Shot editor with action, camera, dialogue and prompt fields](docs/images/shot-editor.jpg)
+
+</details>
+
+### 5. Keep Production Visible
+
+Jobs retain their progress, completed results and failure messages in MongoDB. The task panel can be expanded when you need it and collapsed when you are reviewing media. The assembly page checks available media and uses FFmpeg to concatenate selected clips.
+
+![Persisted completed tasks visible after a page refresh](docs/images/tasks.jpg)
+
+<details>
+<summary><strong>More workspace views: episodes, assembly and model settings</strong></summary>
+
+**Episodes:** organize a longer story into linked projects.
+
+![Series and episode planning page](docs/images/episodes.jpg)
+
+**Assembly:** inspect readiness, missing media and delivery controls. This screenshot is a work-in-progress project; it does not claim a completed new film.
+
+![Assembly readiness and delivery controls](docs/images/assembly.jpg)
+
+**Project settings:** choose model presets and aspect ratios to match the production.
+
+![Project model and aspect-ratio settings](docs/images/project-settings.jpg)
+
+</details>
 
 ## What You Can Create
 
@@ -156,6 +246,8 @@ ltseries/
 
 ## Configuration & Models
 
+LTSeries does not bundle or run generation model weights. It orchestrates remote model APIs. The standard route uses **Alibaba Cloud Model Studio / DashScope** for image and video generation and an **OpenAI-compatible LLM endpoint** for analysis. Custom HTTP adapters are available for asset, video and audio providers.
+
 | Setting | Purpose |
 | --- | --- |
 | `DASHSCOPE_API_KEY`, `DASHSCOPE_BASE_URL` | Image/video provider credentials and API origin |
@@ -168,6 +260,43 @@ ltseries/
 | `AUTH_ENABLED`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `AUTH_SESSION_SECRET` | Single-admin authentication |
 
 Defaults and presets are visible in [.env.example](.env.example) and the [model catalog](backend/internal/services/model_catalog.go). Use the settings page to select models available to your account. Changes to endpoints or process-level configuration may require a backend restart.
+
+## FAQ
+
+<details>
+<summary><strong>Is it free to use?</strong></summary>
+
+The application is MIT-licensed. Hosting, storage and model API usage are separate costs. You supply your own credentials; a repository star or a local installation does not grant provider credits.
+
+</details>
+
+<details>
+<summary><strong>Does self-hosted mean my script never leaves the machine?</strong></summary>
+
+No. Projects and tasks live in your database, but analysis and generation send the relevant script, prompts and references to your configured model provider. Review its data policies and the rights in your inputs before submitting confidential material.
+
+</details>
+
+<details>
+<summary><strong>Can it keep the same character across every shot?</strong></summary>
+
+It provides reference selection, shared style and reference/last-frame records. These are production controls, not a guarantee. Models can ignore a reference or change identity, clothing, geometry and props. Check frames and videos manually. See [consistency limitations](#consistency-is-a-workflow).
+
+</details>
+
+<details>
+<summary><strong>Can I use an uploaded image as a cloud-model reference?</strong></summary>
+
+Only when the provider can fetch its URL. A local `/files` URL, a private network address or an expired provider link is not sufficient. Plan public media delivery with access control appropriate to your content; see [deployment](docs/deployment.md).
+
+</details>
+
+<details>
+<summary><strong>How is it related to LumenX?</strong></summary>
+
+LTSeries is inspired by LumenX's production workflow. It uses a Go/Gin/MongoDB backend and a React studio, with durable jobs and dedicated workflow pages. It is not an official Alibaba project, and feature mapping is not a claim of identical behavior. See the [feature comparison](docs/lumenx-feature-parity.md) and [third-party notices](THIRD_PARTY_NOTICES.md).
+
+</details>
 
 ## Development Checks
 
@@ -188,6 +317,8 @@ CI provisions MongoDB and runs backend tests, type checking and the frontend bui
 - [Functional requirements](docs/functional-requirements.md)
 - [Production workflow evaluation](docs/production-evaluation.md)
 - [LumenX feature mapping](docs/lumenx-feature-parity.md)
+- [Demo media, provenance and reproduction](docs/media/README.md)
+- [Platform-ready publishing kit](docs/media/publishing-kit.md)
 
 ## Roadmap
 

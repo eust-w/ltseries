@@ -26,3 +26,4 @@ uploads/
 test-results/
 playwright-report/
 .repository-backups/
+artifacts/
