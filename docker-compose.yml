@@ -1,0 +1,56 @@
+services:
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - .env
+    environment:
+      PORT: "18080"
+      MONGODB_URI: mongodb://mongo:27017
+      CORS_ALLOWED_ORIGIN: http://localhost:3108
+      STORAGE_DIR: /app/storage
+      CONFIG_PATH: /app/config/.env
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:18080}
+    ports:
+      - "127.0.0.1:18080:18080"
+    volumes:
+      - media_data:/app/storage
+      - ./.env:/app/config/.env
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1:18080/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./LeriesStudio
+    environment:
+      NODE_ENV: production
+      PORT: "3108"
+      BACKEND_URL: http://backend:18080
+    ports:
+      - "127.0.0.1:3108:3108"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+  media_data:

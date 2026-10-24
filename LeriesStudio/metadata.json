@@ -1,0 +1,6 @@
+{
+  "name": "LTSeries Studio",
+  "description": "基于 Go/Gin 后端的短剧生产全流程工作台，支持剧本分析、资产生成、分镜渲染、视频生成及成片拼接。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["video_editing", "ai_content_generation"]
+}

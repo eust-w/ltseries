@@ -1,0 +1,10 @@
+.git
+.env*
+storage
+data
+server
+ltseries-api
+*.log
+*.test
+*.out
+.DS_Store

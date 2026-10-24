@@ -1,0 +1,28 @@
+# Credentials and machine-local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dependencies and build output
+node_modules/
+dist/
+build/
+coverage/
+backend/server
+backend/ltseries-api
+*.test
+*.out
+
+# Runtime data, generated media and local artifacts
+storage/
+data/
+uploads/
+*.log
+*.pid
+.DS_Store
+.playwright-mcp/
+test-results/
+playwright-report/
+.repository-backups/
